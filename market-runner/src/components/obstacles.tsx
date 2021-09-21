@@ -19,12 +19,15 @@ const Obstacles: React.FC<Props> = (props: Props) => {
 
   const ob_width: number = 860 * .08
   const ob_height: number = 900 * .08
-  const [obstacles, setObstacles] = useState(Array())
-  const maxNumberOfObstacles: number = 1;
+  const [obstacles, ] = useState(Array())
   let totalObstaclesCreated: number = 0;
 
+  function spawnObstacle() {
+    return obstacles.length < 1
+  }
+
   useTick(delta => { 
-    if (obstacles.length < maxNumberOfObstacles) {
+    if (spawnObstacle()) {
       obstacles.push([[props.game_width + 100, props.game_height - 50], totalObstaclesCreated]);
       totalObstaclesCreated += 1;
     }
@@ -32,6 +35,7 @@ const Obstacles: React.FC<Props> = (props: Props) => {
 
   function updateObstacle(id: number, x: number, y: number) {
     if (detectCollision(x, y)) {
+      deleteObstacle(id);
       props.end_game();
     } else if (x < 0) {
       deleteObstacle(id);
