@@ -20,8 +20,8 @@ function App() {
   function updatePlayerPosition(x:number, y:number) {
     if (x > 0 && x + player_width < game_width) {
       setPlayerX(x)
-      setPlayerY(y)
     }
+    setPlayerY(y)
   }
 
   function end_game() {
