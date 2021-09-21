@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import * as PIXI from "pixi.js";
 import { Sprite, useTick } from '@inlet/react-pixi';
 import '../App.css';
 
@@ -17,7 +16,6 @@ const Player: React.FC<Props> = (props: Props) => {
   const gravity: number = 1;
   const power: number = 20
   const movement_speed: number = 10;
-  const jump_direction_speed: number = 1;
 
   const [jumpStart, setJumpStart] = useState(props.y_start)
   const [jumpingTime, setJumpingTime] = useState(0)
@@ -33,7 +31,7 @@ const Player: React.FC<Props> = (props: Props) => {
     if (
       (event.code && event.code === 'Space') ||
       (event.code && event.code === 'KeyW') ||
-      (event.pointerId && event.pointerId == 1)
+      (event.pointerId && event.pointerId === 1)
     ) {
       if (!isJumping) {
         setIsJumping(true)
@@ -89,7 +87,7 @@ const Player: React.FC<Props> = (props: Props) => {
         props.update_position(props.x - delta * movement_speed, props.y)
       }
   
-      if (isMovingLeft && momentumDirection == 'left') {
+      if (isMovingLeft && momentumDirection === 'left') {
         props.update_position(props.x - delta * momentum, props.y)
         if (momentum <= 0) {
           setMomentum(0);
@@ -102,7 +100,7 @@ const Player: React.FC<Props> = (props: Props) => {
         props.update_position(props.x + delta * movement_speed, props.y)
       }
   
-      if (isMovingRight && momentumDirection == 'right') {
+      if (isMovingRight && momentumDirection === 'right') {
         props.update_position(props.x + delta * momentum, props.y)
         if (momentum <= 0) {
           setMomentum(0);
