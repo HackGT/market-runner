@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Fragment } from 'react'
 import { useTick } from '@inlet/react-pixi';
-import '../App.css';
 
 import Obstacle from './obstacle'
 
@@ -19,7 +18,7 @@ const Obstacles: React.FC<Props> = (props: Props) => {
 
   const ob_width: number = 860 * .08
   const ob_height: number = 900 * .08
-  const [obstacles, ] = useState(Array())
+  const [obstacles, setObstacles] = useState<any>([])
   let totalObstaclesCreated: number = 0;
 
   function spawnObstacle() {
@@ -28,7 +27,7 @@ const Obstacles: React.FC<Props> = (props: Props) => {
 
   useTick(delta => { 
     if (spawnObstacle()) {
-      obstacles.push([[props.game_width + 100, props.game_height - 50], totalObstaclesCreated]);
+      setObstacles([...obstacles, [[props.game_width + 100, props.game_height - 50], totalObstaclesCreated]]);
       totalObstaclesCreated += 1;
     }
   });
@@ -45,7 +44,7 @@ const Obstacles: React.FC<Props> = (props: Props) => {
   function deleteObstacle(idToDelete: number) {
     for (let i = 0; i < obstacles.length; i++) {
       if (obstacles[i][1] === idToDelete) {
-        obstacles.splice(i, 1);
+        setObstacles(obstacles.splice(i, 1));
         return;
       }
     }
