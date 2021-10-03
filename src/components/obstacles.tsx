@@ -16,41 +16,37 @@ type Props = {
 
 const Obstacles: React.FC<Props> = (props: Props) => {
 
-  const ob_width: number = 860 * .08
-  const ob_height: number = 900 * .08
-  const [obstacles, setObstacles] = useState<any>([])
-  let totalObstaclesCreated: number = 0;
+  const [obstacles, setObstacles] = useState<any>([[0,0]])
+  let totalObstaclesCreated: number = 1;
 
   function spawnObstacle() {
     return obstacles.length < 1
   }
 
-  useTick(delta => { 
-    if (spawnObstacle()) {
-      setObstacles([...obstacles, [[props.game_width + 100, props.game_height - 50], totalObstaclesCreated]]);
-      totalObstaclesCreated += 1;
-    }
-  });
-
-  function updateObstacle(id: number, x: number, y: number) {
-    if (detectCollision(x, y)) {
+  function updateObstacle(id: number, x: number, y: number, ob_width: number, ob_height: number) {
+    if (detectCollision(x, y, ob_width, ob_height)) {
       deleteObstacle(id);
       props.end_game();
-    } else if (x < 0) {
+    } else if (x + ob_width <= 0) {
       deleteObstacle(id);
+    }
+    if (spawnObstacle()) {
+      setObstacles([...obstacles, [Math.floor(Math.random() * 3), totalObstaclesCreated]]);
+      totalObstaclesCreated += 1;
     }
   }
 
   function deleteObstacle(idToDelete: number) {
     for (let i = 0; i < obstacles.length; i++) {
       if (obstacles[i][1] === idToDelete) {
-        setObstacles(obstacles.splice(i, 1));
+        let newObstacles = obstacles.splice(i, i+1);
+        setObstacles(newObstacles);
         return;
       }
     }
   }
 
-  function detectCollision(ob_x: number, ob_y: number) {
+  function detectCollision(ob_x: number, ob_y: number, ob_width: number, ob_height: number) {
     return (
       ob_x + ob_width > props.player_x &&
       ob_x < props.player_x + props.player_width &&
@@ -63,7 +59,7 @@ const Obstacles: React.FC<Props> = (props: Props) => {
     <Fragment>
       {
         obstacles.map((obstacle: any, index: any) => {
-          return (<Obstacle check_obstacle={updateObstacle} obstacleID={obstacle[1]} x_start={props.game_width + 100} y_start={props.game_height - 100} />)
+          return (<Obstacle check_obstacle={updateObstacle} obstacleType={obstacle[0]} obstacleID={obstacle[1]} x_start={props.game_width + 100} y_start={props.game_height} />)
         })
       }
     </Fragment>

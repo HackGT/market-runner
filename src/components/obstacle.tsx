@@ -2,29 +2,32 @@ import { useState } from 'react'
 import { Sprite, useTick } from '@inlet/react-pixi';
 import '../App.css';
 
-import obstacleImage from '../assets/bulldog.png';
+import ObstacleBike from './obstacleBike'
+import ObstacleCat from './obstacleCat'
+import ObstacleTable from './obstacleTable'
 
 type Props = {
   obstacleID: number;
   x_start: number;
   y_start: number;
   check_obstacle: any;
+  obstacleType: number;
 };
 
 const Obstacle: React.FC<Props> = (props: Props) => {
-
-  const [x, setX] = useState(props.x_start)
-  const [y, ] = useState(props.y_start)
-
-  useTick(_ => {
-    props.check_obstacle(props.obstacleID, x, y)
-    setX(x - 5)
-  });
-
-  return (
-    <Sprite image={obstacleImage} scale={.08} x={x} y={y}/>
-  )
-
+  if (props.obstacleType == 0) {
+    return (
+      <ObstacleBike check_obstacle={props.check_obstacle} obstacleID={props.obstacleID} x_start={props.x_start} y_start={props.y_start} />
+    )
+  } else if (props.obstacleType == 1) {
+    return (
+      <ObstacleCat check_obstacle={props.check_obstacle} obstacleID={props.obstacleID} x_start={props.x_start} y_start={props.y_start} />
+    )
+  } else {
+    return (
+      <ObstacleTable check_obstacle={props.check_obstacle} obstacleID={props.obstacleID} x_start={props.x_start} y_start={props.y_start-50} />
+    )
+  }
 }
 
 export default Obstacle;

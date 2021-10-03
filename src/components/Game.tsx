@@ -36,7 +36,7 @@ function Game() {
             width={game_width}
             height={game_height}
         />
-        <Sky game_width={game_width} />
+        <Sky game_width={game_width} game_height={game_height}/>
         <Foreground game_width={game_width} game_height={game_height} />
         <Player y_start={game_height-100} x={playerX} y={playerY} update_position={updatePlayerPosition}/>
         <Obstacles end_game={end_game} player_x={playerX} player_y={playerY} game_width={game_width} game_height={game_height} player_height={1200*.06} player_width={1325*.06}/>

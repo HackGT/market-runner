@@ -12,7 +12,7 @@ const Foreground: React.FC<Props> = (props: Props) => {
 
   const [position, setPosition] = useState(0);
   useTick(delta => { 
-    setPosition(position - delta*3)
+    setPosition(position - delta*2)
   });
 
   return (
@@ -20,8 +20,8 @@ const Foreground: React.FC<Props> = (props: Props) => {
         image={skyImage}
         tilePosition={{ x: position, y: 0 }}
         width={props.game_width}
-        height={200}
-        y={props.game_height - 200}
+        height={180}
+        y={props.game_height - 215}
     />
   );
 }
