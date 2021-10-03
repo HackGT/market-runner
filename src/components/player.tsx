@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Sprite, useTick } from '@inlet/react-pixi';
+import { AnimatedSprite, useTick } from '@inlet/react-pixi';
+import { Texture } from 'pixi.js';
+
 import '../App.css';
 
-import playerImage from '../assets/player.png';
+import player1 from '../assets/player1.png';
+import player2 from '../assets/player2.png';
+import player3 from '../assets/player3.png';
+import player4 from '../assets/player4.png';
 
 type Props = {
   y_start: number;
@@ -117,7 +122,24 @@ const Player: React.FC<Props> = (props: Props) => {
   });
 
   return (
-    <Sprite image={playerImage} scale={.06} x={props.x} y={props.y} />
+    <AnimatedSprite
+      animationSpeed={0.167}
+      isPlaying={true}
+      textures={[
+        Texture.from(player1),
+        Texture.from(player2),
+        Texture.from(player3),
+        Texture.from(player4),
+        Texture.from(player4),
+        Texture.from(player3),
+        Texture.from(player2),
+        Texture.from(player1),
+      ]}
+      anchor={0.5}
+      scale={.25}
+      x={props.x}
+      y={props.y}
+    />
   );
 }
 

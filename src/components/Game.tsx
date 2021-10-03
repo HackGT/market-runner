@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Stage, TilingSprite } from '@inlet/react-pixi';
-import { BaseTexture } from 'pixi.js';
 
 import Player from './player';
 import Obstacles from './obstacles';
