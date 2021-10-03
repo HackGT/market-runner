@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 
 import { scoresRoutes } from './routes/scores';
 import { handleError } from './utils/handleError';
+import { isAuthenticated } from './auth/auth';
 
 const PORT = process.env.PORT || 8000
 
