@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { AnimatedSprite, useTick } from '@inlet/react-pixi';
+import { Container, AnimatedSprite, useTick } from '@inlet/react-pixi';
 import { Texture } from 'pixi.js';
 
 import '../App.css';
@@ -18,9 +18,15 @@ type Props = {
 
 const Player: React.FC<Props> = (props: Props) => {
 
+  const playerTexture1 = Texture.from(player1)
+  const playerTexture2 = Texture.from(player2)
+  const playerTexture3 = Texture.from(player3)
+  const playerTexture4 = Texture.from(player4)
+  const [frames, setFrames] = useState<any[]>([])
+
   const gravity: number = 1;
   const power: number = 20
-  const movement_speed: number = 10;
+  const movement_speed: number = 3.75;
 
   const [jumpStart, setJumpStart] = useState(props.y_start)
   const [jumpingTime, setJumpingTime] = useState(0)
@@ -31,6 +37,7 @@ const Player: React.FC<Props> = (props: Props) => {
 
   const [momentum, setMomentum] = useState(0)
   const [momentumDirection, setMomentumDirection] = useState("none");
+
 
   function start_move(event: any) {
     if (
@@ -117,29 +124,30 @@ const Player: React.FC<Props> = (props: Props) => {
   });
 
   useEffect(() => {
+    setFrames([
+      playerTexture1,
+      playerTexture2,
+      playerTexture3,
+      playerTexture4
+    ])
     document.addEventListener('keydown', start_move);
     document.addEventListener('keyup', stop_move);
-  });
+  }, []);
+
+  if (frames.length == 0) {
+    return null
+  }
 
   return (
-    <AnimatedSprite
-      animationSpeed={0.167}
-      isPlaying={true}
-      textures={[
-        Texture.from(player1),
-        Texture.from(player2),
-        Texture.from(player3),
-        Texture.from(player4),
-        Texture.from(player4),
-        Texture.from(player3),
-        Texture.from(player2),
-        Texture.from(player1),
-      ]}
-      anchor={0.5}
-      scale={.25}
-      x={props.x}
-      y={props.y}
-    />
+    <Container x={props.x} y={props.y}>
+      <AnimatedSprite
+        animationSpeed={0.167}
+        isPlaying={true}
+        textures={frames}
+        anchor={0.5}
+        scale={.25}
+      />
+    </Container>
   );
 }
 

@@ -6,13 +6,14 @@ import skyImage from '../assets/foreground.png';
 type Props = {
   game_width: number;
   game_height: number;
+  speed: number;
 };
 
 const Foreground: React.FC<Props> = (props: Props) => {
 
   const [position, setPosition] = useState(0);
-  useTick(delta => { 
-    setPosition(position - delta*2)
+  useTick(_ => { 
+    setPosition(position - props.speed)
   });
 
   return (

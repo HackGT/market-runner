@@ -9,6 +9,7 @@ type Props = {
   x_start: number;
   y_start: number;
   check_obstacle: any;
+  speed: number;
 };
 
 const ObstacleBike: React.FC<Props> = (props: Props) => {
@@ -21,7 +22,7 @@ const ObstacleBike: React.FC<Props> = (props: Props) => {
 
   useTick(_ => {
     props.check_obstacle(props.obstacleID, x, y, width, height)
-    setX(x - 2)
+    setX(x - props.speed)
   });
 
   return (
