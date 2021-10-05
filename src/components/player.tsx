@@ -25,8 +25,8 @@ const Player: React.FC<Props> = (props: Props) => {
   const [frames, setFrames] = useState<any[]>([])
 
   const gravity: number = 1;
-  const power: number = 20
-  const movement_speed: number = 3.75;
+  const power: number = 20;
+  const movement_speed: number = 4;
 
   const [jumpStart, setJumpStart] = useState(props.y_start)
   const [jumpingTime, setJumpingTime] = useState(0)

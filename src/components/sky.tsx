@@ -12,7 +12,7 @@ const Sky: React.FC<Props> = (props: Props) => {
 
   const [skyPosition, setSkyPosition] = useState(0);
   useTick(delta => { 
-    setSkyPosition(skyPosition - delta*.5)
+    setSkyPosition(skyPosition - delta)
   });
 
   return (

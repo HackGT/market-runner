@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Container, Stage, TilingSprite, useTick } from '@inlet/react-pixi';
+import { useState } from 'react'
+import { Container, Stage, TilingSprite, useTick, Text } from '@inlet/react-pixi';
 
 import Player from './player';
 import Obstacles from './obstacles';
@@ -33,7 +33,7 @@ const Game: React.FC<Props> = (props: Props) => {
   const [playerX, setPlayerX] = useState(props.game_width/4);
   const [playerY, setPlayerY] = useState(props.game_height - 70);
   function updatePlayerPosition(x:number, y:number) {
-    if (x > 0 && x + player_width < props.game_width) {
+    if (x - player_width/2 > 0 && x + player_width/2 < props.game_width) {
       setPlayerX(x)
     }
     setPlayerY(y)
@@ -43,23 +43,33 @@ const Game: React.FC<Props> = (props: Props) => {
   const [gameSpeed, setGameSpeed] = useState(0);
   useTick(delta => {
     setTime(time_passed + delta*.005)
-    setGameSpeed(10*(1-Math.exp(-.05 * time_passed)) + 1)
+    setGameSpeed(10*(1-Math.exp(-.04 * time_passed)) + 3)
   });
 
   function end_game() {
     window.location.reload();
   }
 
+  function get_score() {
+    return "Score: " + String(Math.floor(time_passed * 5))
+  }
+
   return (
     <Container>
       <TilingSprite
-              image={backgroundImage}
-              tilePosition={{ x: 0, y: 0 }}
-              width={props.game_width}
-              height={props.game_height}
-          />
+        image={backgroundImage}
+        tilePosition={{ x: 0, y: 0 }}
+        width={props.game_width}
+        height={props.game_height}
+      />
       <Sky game_width={props.game_width} game_height={props.game_height}/>
       <Foreground speed={gameSpeed} game_width={props.game_width} game_height={props.game_height} />
+      <Text 
+        text={get_score()}
+        anchor={0.5}
+        x={150}
+        y={150}
+      />
       <Player y_start={props.game_height-70} x={playerX} y={playerY} update_position={updatePlayerPosition}/>
       <Obstacles speed={gameSpeed} end_game={end_game} player_x={playerX} player_y={playerY} game_width={props.game_width} game_height={props.game_height} player_height={1200*.06} player_width={1325*.06}/>
     </Container>
