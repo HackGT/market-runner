@@ -30,7 +30,7 @@ const Game: React.FC<Props> = (props: Props) => {
   
   const player_width = 292 * .25
 
-  const [playerX, setPlayerX] = useState(props.game_width/4);
+  const [playerX, setPlayerX] = useState(props.game_width/6);
   const [playerY, setPlayerY] = useState(props.game_height - 70);
   function updatePlayerPosition(x:number, y:number) {
     if (x - player_width/2 > 0 && x + player_width/2 < props.game_width) {
@@ -67,10 +67,13 @@ const Game: React.FC<Props> = (props: Props) => {
       <Text 
         text={get_score()}
         anchor={0.5}
-        x={150}
-        y={150}
+        x={60}
+        y={20}
+        style={{
+          fill: "white"
+        }}
       />
-      <Player y_start={props.game_height-70} x={playerX} y={playerY} update_position={updatePlayerPosition}/>
+      <Player movement_speed={gameSpeed} x_start={props.game_width/6} y_start={props.game_height-70} x={playerX} y={playerY} update_position={updatePlayerPosition}/>
       <Obstacles speed={gameSpeed} end_game={end_game} player_x={playerX} player_y={playerY} game_width={props.game_width} game_height={props.game_height} player_height={1200*.06} player_width={1325*.06}/>
     </Container>
   )

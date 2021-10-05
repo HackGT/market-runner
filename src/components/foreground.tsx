@@ -21,7 +21,7 @@ const Foreground: React.FC<Props> = (props: Props) => {
         image={skyImage}
         tilePosition={{ x: position, y: 0 }}
         width={props.game_width}
-        height={180}
+        height={210}
         y={props.game_height - 215}
     />
   );
