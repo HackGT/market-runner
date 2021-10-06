@@ -41,7 +41,6 @@ const Player: React.FC<Props> = (props: Props) => {
       (event.code && event.code === 'ArrowUp') ||
       (event.pointerId && event.pointerId === 1)
     ) {
-      setGravity(1)
       setIsJumping(true)
     }
   };
@@ -53,7 +52,7 @@ const Player: React.FC<Props> = (props: Props) => {
       (event.code && event.code === 'ArrowUp') ||
       (event.pointerId && event.pointerId === 1)
     ) {
-      setGravity(1.4)
+      setGravity(1.25)
     }
   };
 
