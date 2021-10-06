@@ -12,58 +12,67 @@ type Props = {
   game_width: number;
   game_height: number;
   end_game: any;
+  speed: number;
 };
 
 const Obstacles: React.FC<Props> = (props: Props) => {
 
-  const ob_width: number = 860 * .08
-  const ob_height: number = 900 * .08
-  const [obstacles, setObstacles] = useState<any>([])
-  let totalObstaclesCreated: number = 0;
+  const [obstacles, setObstacles] = useState<any>(
+    {
+      "0": {
+        "type": 0,
+        "position": props.game_width,
+        "valid": true
+      }
+    }
+  )
+  const [totalObstaclesCreated, setTotalObstaclesCreated] = useState(1)
+  const [nextObstacleDistance, setNextObstacleDistance] = useState(200)
 
   function spawnObstacle() {
-    return obstacles.length < 1
+    let furthest_distance: number = 0;
+    for (const key of Object.keys(obstacles)) {
+      furthest_distance = Math.max(furthest_distance, obstacles[key]['position'])
+    }
+    return props.game_width - furthest_distance >= nextObstacleDistance 
   }
 
-  useTick(delta => { 
+  useTick(_ => {
     if (spawnObstacle()) {
-      setObstacles([...obstacles, [[props.game_width + 100, props.game_height - 50], totalObstaclesCreated]]);
-      totalObstaclesCreated += 1;
+      obstacles[totalObstaclesCreated] = {
+        "type": Math.floor(Math.random() * 3),
+        "position": props.game_width,
+        "valid": true
+      }
+      setTotalObstaclesCreated(totalObstaclesCreated + 1)
+      setNextObstacleDistance(Math.floor(Math.random() * (350 - 200 + 1)) + 200)
     }
   });
 
-  function updateObstacle(id: number, x: number, y: number) {
-    if (detectCollision(x, y)) {
-      deleteObstacle(id);
+  function updateObstacle(id: number, x: number, y: number, ob_width: number, ob_height: number) {
+    obstacles[id].position = x;
+    if (detectCollision(x, y, ob_width, ob_height)) {
       props.end_game();
-    } else if (x < 0) {
-      deleteObstacle(id);
+    } else if (x + ob_width <= 0) {
+      obstacles[id]["valid"] = false
     }
   }
 
-  function deleteObstacle(idToDelete: number) {
-    for (let i = 0; i < obstacles.length; i++) {
-      if (obstacles[i][1] === idToDelete) {
-        setObstacles(obstacles.splice(i, 1));
-        return;
-      }
-    }
-  }
-
-  function detectCollision(ob_x: number, ob_y: number) {
+  function detectCollision(ob_x: number, ob_y: number, ob_width: number, ob_height: number) {
     return (
-      ob_x + ob_width > props.player_x &&
-      ob_x < props.player_x + props.player_width &&
-      ob_y + ob_height > props.player_y &&
-      ob_y < props.player_y + props.player_height
+      ((props.player_x + props.player_width/2 < ob_x + ob_width && props.player_x + props.player_width/2 > ob_x) || (props.player_x - props.player_width/2 < ob_x + 7*ob_width/10 && props.player_x - props.player_width/2 > ob_x)) &&
+      props.player_y + props.player_height/2 > ob_y &&
+      props.player_y < ob_y + ob_height
     );
   };
 
   return (
     <Fragment>
       {
-        obstacles.map((obstacle: any, index: any) => {
-          return (<Obstacle check_obstacle={updateObstacle} obstacleID={obstacle[1]} x_start={props.game_width + 100} y_start={props.game_height - 100} />)
+        Object.keys(obstacles).map((key: any, index: any) => {
+          if (obstacles[key]["valid"]) {
+            return (<Obstacle speed={props.speed} check_obstacle={updateObstacle} obstacleType={obstacles[key]["type"]} obstacleID={key} x_start={props.game_width+100} y_start={props.game_height} />)
+          }
         })
       }
     </Fragment>

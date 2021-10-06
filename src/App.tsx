@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import Home from './components/Home/Home'
-import Game from './components/Game';
+import GameWrapper from './components/Game';
 
 const App = () => {
     return (
@@ -17,7 +17,7 @@ const App = () => {
                     <Home />
                 </Route>
                 <Route path='/game'>
-                    <Game />
+                    <GameWrapper />
                 </Route>
             </Switch>
         </Router>
