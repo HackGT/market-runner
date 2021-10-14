@@ -21,6 +21,7 @@ const Sky: React.FC<Props> = (props: Props) => {
         tilePosition={{ x: skyPosition, y: 0 }}
         height={props.game_height}
         width={props.game_width}
+        scale={props.game_height/451}
     />
   );
 }

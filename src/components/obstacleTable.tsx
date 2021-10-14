@@ -14,11 +14,11 @@ type Props = {
 
 const ObstacleTable: React.FC<Props> = (props: Props) => {
 
-  const width = 96 * .5;
-  const height = 69 * .5;
+  const width = 96 * .6;
+  const height = 69 * .6;
 
   const [x, setX] = useState(props.x_start)
-  const [y, ] = useState(props.y_start - 20)
+  const [y, ] = useState(props.y_start - 35)
 
   useTick(_ => {
     props.check_obstacle(props.obstacleID, x, y, width, height)
@@ -26,7 +26,7 @@ const ObstacleTable: React.FC<Props> = (props: Props) => {
   });
 
   return (
-    <Sprite image={bike} scale={.5} x={x} y={y}/>
+    <Sprite image={bike} scale={.6} x={x} y={y}/>
   )
 }
 

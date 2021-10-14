@@ -1,4 +1,21 @@
+body {
+  background-image: url("./assets/superbackground.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+html {
+  height: auto;
+  min-height: 100%;
+  background-size:cover;
+}
+
 .App {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
   text-align: center;
 }
 
