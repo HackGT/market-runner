@@ -25,12 +25,13 @@
   },
   "dependencies": {
     "@prisma/client": "3.1.1",
-    "@quixo3/prisma-session-store": "^3.1.0",
+    "@quixo3/prisma-session-store": "3.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "http-status-codes": "^2.1.4",
+    "node-fetch": "^3.0.0",
     "passport": "^0.5.0",
     "passport-ground-truth": "^1.0.3"
   }

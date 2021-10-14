@@ -11,13 +11,14 @@ scoresRoutes.get('/', async (req, res) => {
 })
 
 scoresRoutes.post('/', async (req, res) => {
-  const { email, name, score } = req.body
+  const { score, uuid } = req.body
 
-  const createdScore = await prisma.user.create({
+  const createdScore = await prisma.user.update({
+    where: {
+      uuid
+    },
     data: {
-      email,
-      name,
-      score: score || 0
+      score
     }
   })
 
