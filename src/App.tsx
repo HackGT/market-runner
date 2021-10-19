@@ -6,8 +6,9 @@ import {
   Link
 } from "react-router-dom";
 
-import Home from './components/Home/Home'
+import Home from './components/Home/Home';
 import GameWrapper from './components/Game';
+import Instructions from './components/Instructions/Instructions';
 
 const App = () => {
     return (
@@ -18,6 +19,9 @@ const App = () => {
                 </Route>
                 <Route path='/game'>
                     <GameWrapper />
+                </Route>
+                <Route path='/instructions'>
+                    <Instructions />
                 </Route>
             </Switch>
         </Router>

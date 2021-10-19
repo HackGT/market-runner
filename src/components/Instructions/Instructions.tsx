@@ -1,29 +1,26 @@
 import React from 'react';
-import styles from './Home.module.css'
+import styles from './Instructions.module.css'
 import {
     Link
 } from 'react-router-dom'
+import instructions from '../../assets/instructions.png'
 
 import Button from '../Button/Button'
 
-const Home = () => {
+const Instructions = () => {
     return(
         <div className={styles.container}>
-            <h1 className={styles.title}>
-                Market Runner
-            </h1>
-
+            <img src={instructions} className={styles.img} />;
             <div className={styles.button_group}>
+                <Link to={'/'}>
+                    <Button>Home</Button>
+                </Link>
                 <Link to={'/game'}>
                     <Button>Start</Button>
                 </Link>
-                <Link to={'/instructions'}>
-                    <Button>Instructions</Button>
-                </Link>
-                <Button>Leaderboards</Button>
             </div>
         </div>
     )
 }
 
-export default Home;
+export default Instructions;
