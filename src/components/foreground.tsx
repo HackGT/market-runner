@@ -22,7 +22,8 @@ const Foreground: React.FC<Props> = (props: Props) => {
         tilePosition={{ x: position, y: 0 }}
         width={props.game_width}
         height={210}
-        y={props.game_height - 215}
+        y={props.game_height - 210}
+        alpha={.8}
     />
   );
 }

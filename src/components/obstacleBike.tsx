@@ -14,8 +14,8 @@ type Props = {
 
 const ObstacleBike: React.FC<Props> = (props: Props) => {
 
-  const width = 351 * .35;
-  const height = 247 * .35;
+  const width = 272 * .5;
+  const height = 203 * .5;
 
   const [x, setX] = useState(props.x_start)
   const [y, ] = useState(props.y_start-105)
@@ -26,7 +26,7 @@ const ObstacleBike: React.FC<Props> = (props: Props) => {
   });
 
   return (
-    <Sprite image={bike} scale={.35} x={x} y={y}/>
+    <Sprite image={bike} scale={.5} x={x} y={y}/>
   )
 }
 

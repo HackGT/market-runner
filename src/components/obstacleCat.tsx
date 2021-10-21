@@ -14,8 +14,8 @@ type Props = {
 
 const ObstacleCat: React.FC<Props> = (props: Props) => {
 
-  const width = 96 * .35;
-  const height = 69 * .35;
+  const width = 136 * .35;
+  const height = 109 * .35;
 
   const [x, setX] = useState(props.x_start)
   const [y, ] = useState(props.y_start-50)
