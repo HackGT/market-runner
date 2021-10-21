@@ -16,7 +16,7 @@ const Instructions = () => {
                     <Button>Home</Button>
                 </Link>
                 <Link to={'/game'}>
-                    <Button>Start</Button>
+                    <Button>Play Game</Button>
                 </Link>
             </div>
         </div>

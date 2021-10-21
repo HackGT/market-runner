@@ -48,7 +48,7 @@ const Game: React.FC<Props> = (props: Props) => {
   });
 
   function end_game() {
-    window.location.reload();
+    window.location.href = '/gameover/' + String(Math.floor(time_passed * 5));
   }
 
   function get_score() {

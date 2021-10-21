@@ -4,23 +4,31 @@ import {
     Link
 } from 'react-router-dom'
 
-import Button from '../Button/Button'
+import { useParams } from "react-router-dom";
 import gameover from '../../assets/gameover.png'
 
 const EndGame = () => {
-    return(
+
+    const { score } = useParams<{ score: string }>();
+
+    return (
         <div className={styles.container}>
             <img src={gameover} className={styles.img} />;
-            <div className={styles.button_super_group}>
-                <Link to={'/game'} className="leaderboard_label">
-                    <Button>Leaderboard</Button>
-                </Link>
-                <div className={styles.button_group}>
+            <div className={styles.score}>
+                Score: {score}
+            </div>
+            <div className={styles.button_group}>
+                <div className={styles.leaderboardButton}>
+                    <Link to={'/leaderboard'}>
+                        <button className={styles.white_button}>Leaderboard</button>
+                    </Link>
+                </div>
+                <div>
                     <Link to={'/'}>
-                        <Button>Home</Button>
+                        <button className={styles.blue_button}>Home</button>
                     </Link>
                     <Link to={'/game'}>
-                        <Button>Play Again</Button>
+                        <button className={styles.blue_button}>Play Again</button>
                     </Link>
                 </div>
             </div>

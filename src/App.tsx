@@ -9,6 +9,7 @@ import {
 import Home from './components/Home/Home';
 import GameWrapper from './components/Game';
 import Instructions from './components/Instructions/Instructions';
+import Leaderboard from './components/Leaderboard/Leaderboard';
 import EndGame from './components/EndGame/EndGame';
 
 const App = () => {
@@ -24,8 +25,11 @@ const App = () => {
                 <Route path='/instructions'>
                     <Instructions />
                 </Route>
-                <Route path='/gameover'>
+                <Route path='/gameover/:score'>
                     <EndGame />
+                </Route>
+                <Route path='/leaderboard'>
+                    <Leaderboard />
                 </Route>
             </Switch>
         </Router>

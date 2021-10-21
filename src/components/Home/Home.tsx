@@ -15,12 +15,14 @@ const Home = () => {
 
             <div className={styles.button_group}>
                 <Link to={'/game'}>
-                    <Button>Start</Button>
+                    <Button>Play Game</Button>
                 </Link>
                 <Link to={'/instructions'}>
                     <Button>Instructions</Button>
                 </Link>
-                <Button>Leaderboards</Button>
+                <Link to={'/leaderboard'}>
+                <Button>Leaderboard</Button>
+                </Link>
             </div>
         </div>
     )

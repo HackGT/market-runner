@@ -83,7 +83,7 @@ const Player: React.FC<Props> = (props: Props) => {
       }
 
       updatedY = jumpStart + jumpHeight * -1
-      updatedX = props.x + delta * 2
+      updatedX = props.x + delta * 5
 
       props.update_position(updatedX, updatedY)
       setJumpingTime(jumpingTime + delta)
