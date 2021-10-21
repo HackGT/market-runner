@@ -59,11 +59,13 @@ const Obstacles: React.FC<Props> = (props: Props) => {
   }
 
   function detectCollision(ob_x: number, ob_y: number, ob_width: number, ob_height: number) {
-    return (
-      ((props.player_x + props.player_width/2 < ob_x + ob_width && props.player_x + props.player_width/2 > ob_x) || (props.player_x - props.player_width/2 < ob_x + 7*ob_width/10 && props.player_x - props.player_width/2 > ob_x)) &&
-      props.player_y + props.player_height/2 > ob_y &&
-      props.player_y < ob_y + ob_height
-    );
+    let p_left = props.player_x - props.player_width/2
+    let p_right = props.player_x + props.player_width/2
+    let p_top = props.player_y - props.player_height/2
+    let p_bot = props.player_y + props.player_height/2
+
+    return ((p_left < ob_x + ob_width && p_left > ob_x) || (p_right < ob_x + ob_width && p_right > ob_x)) &&
+           (p_bot > ob_y && p_bot < ob_y + ob_height)
   };
 
   return (

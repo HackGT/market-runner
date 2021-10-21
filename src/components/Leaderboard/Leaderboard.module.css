@@ -87,4 +87,9 @@
   }
 }
 
-
+@media (max-height: 680px) {
+  .table_entry {
+    padding: 0px 20px;
+    font-size: 16px;
+  }
+}

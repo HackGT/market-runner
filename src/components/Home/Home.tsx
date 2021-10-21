@@ -8,7 +8,7 @@ import Button from '../Button/Button'
 
 const Home = () => {
     return(
-        <div className={styles.container}>
+        <div>
             <h1 className={styles.title}>
                 Market Runner
             </h1>
