@@ -26,6 +26,7 @@ const Player: React.FC<Props> = (props: Props) => {
   const playerTexture4 = Texture.from(player4)
   const [frames, setFrames] = useState<any[]>([])
 
+  const [forceDescend, setForceDescend] = useState(false)
   const [gravity, setGravity] = useState(1)
   const power: number = 20;
 
@@ -52,7 +53,7 @@ const Player: React.FC<Props> = (props: Props) => {
       (event.code && event.code === 'ArrowUp') ||
       (event.pointerId && event.pointerId === 1)
     ) {
-      setGravity(1.1)
+      setForceDescend(true)
     }
   };
 
@@ -62,18 +63,27 @@ const Player: React.FC<Props> = (props: Props) => {
       let updatedX = props.x
       let updatedY = props.y
 
+      if (forceDescend) {
+        if (jumpingTime <= 20) {
+          setGravity(1.4)
+        } else {
+          setGravity(1.1)
+        }
+        setForceDescend(false)
+      }
       const jumpHeight = (-gravity / 2) * Math.pow(jumpingTime, 2) + power * jumpingTime + .001;
       if (jumpHeight < 0 || jumpStart + jumpHeight < props.y_start) {
         setJumpStart(props.y_start)
         setIsJumping(false);
         setJumpingTime(0);
+        setForceDescend(false)
         setGravity(1)
         props.update_position(props.x, props.y_start);
         return;
       }
 
       updatedY = jumpStart + jumpHeight * -1
-      updatedX = props.x + delta * 5
+      updatedX = props.x + delta * 2
 
       props.update_position(updatedX, updatedY)
       setJumpingTime(jumpingTime + delta)

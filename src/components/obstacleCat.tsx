@@ -14,11 +14,11 @@ type Props = {
 
 const ObstacleCat: React.FC<Props> = (props: Props) => {
 
-  const width = 136 * .35;
-  const height = 109 * .35;
+  const width = 136 * .5;
+  const height = 109 * .5;
 
   const [x, setX] = useState(props.x_start)
-  const [y, ] = useState(props.y_start-50)
+  const [y, ] = useState(props.y_start-60)
 
   useTick(_ => {
     props.check_obstacle(props.obstacleID, x, y, width, height)
@@ -26,7 +26,7 @@ const ObstacleCat: React.FC<Props> = (props: Props) => {
   });
 
   return (
-    <Sprite image={bike} scale={.35} x={x} y={y}/>
+    <Sprite image={bike} scale={.5} x={x} y={y}/>
   )
 }
 

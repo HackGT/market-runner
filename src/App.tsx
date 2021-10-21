@@ -9,6 +9,7 @@ import {
 import Home from './components/Home/Home';
 import GameWrapper from './components/Game';
 import Instructions from './components/Instructions/Instructions';
+import EndGame from './components/EndGame/EndGame';
 
 const App = () => {
     return (
@@ -22,6 +23,9 @@ const App = () => {
                 </Route>
                 <Route path='/instructions'>
                     <Instructions />
+                </Route>
+                <Route path='/gameover'>
+                    <EndGame />
                 </Route>
             </Switch>
         </Router>

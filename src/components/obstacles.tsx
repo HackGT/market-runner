@@ -45,7 +45,7 @@ const Obstacles: React.FC<Props> = (props: Props) => {
         "valid": true
       }
       setTotalObstaclesCreated(totalObstaclesCreated + 1)
-      setNextObstacleDistance(Math.floor(Math.random() * (400 - 275 + 1)) + 275)
+      setNextObstacleDistance(Math.floor(Math.random() * (400 - 300 + 1)) + 300)
     }
   });
 
