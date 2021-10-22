@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import express from "express";
-import fetch from "node-fetch";
+import axios from "axios";
 import passport from "passport";
 
 export const authRoutes = express.Router();
@@ -8,6 +8,7 @@ export const authRoutes = express.Router();
 authRoutes.get("/login", passport.authenticate("groundtruth"));
 
 authRoutes.route("/login/callback").get((req, res, next) => {
+  console.log("hereee");
   if (req.query.error === "access_denied") {
     res.redirect("/auth/login");
     return;
@@ -31,7 +32,7 @@ authRoutes.route("/logout").all(async (req, res) => {
 
   if (user) {
     try {
-      await fetch(`${process.env.GROUND_TRUTH_URL}/auth/logout`, {
+      await axios(`${process.env.GROUND_TRUTH_URL}/auth/logout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${user.token}`,

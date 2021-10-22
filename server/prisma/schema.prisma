@@ -17,4 +17,15 @@ model User {
   uuid  String @unique
   token String
   score Int
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+
+  @@map("session")
 }
