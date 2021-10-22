@@ -1,13 +1,12 @@
 import express from "express";
-import passport from "passport";
 import session from "express-session";
-import dotenv from "dotenv";
-import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import passport from "passport";
 import { Strategy as GroundTruthStrategy } from "passport-ground-truth";
-import { UserRole } from "@prisma/client";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 
-import { app } from "../app";
 import { prisma } from "../common";
+import { app } from "../app";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -26,7 +25,7 @@ app.use(
     cookie: {
       maxAge: 7 * 24 * 60 * 60 * 1000, // ms
     },
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET!,
     saveUninitialized: false,
     resave: true,
     store: new PrismaSessionStore(prisma, {
@@ -45,6 +44,7 @@ export function isAuthenticated(
   next: express.NextFunction
 ): void {
   response.setHeader("Cache-Control", "private");
+  console.log(request.user);
   if (!request.isAuthenticated() || !request.user) {
     if (request.session) {
       request.session.returnTo = request.originalUrl;
@@ -77,7 +77,7 @@ passport.use(
             uuid: profile.uuid,
             email: profile.email,
             token: profile.token,
-            role: UserRole.GENERAL,
+            score: 0,
           },
         });
       } else {
@@ -97,8 +97,9 @@ passport.use(
 );
 
 passport.serializeUser<string>((user, done) => {
-  done(null, user.uuid);
+  done(null, user.uuid || "");
 });
+
 passport.deserializeUser<string>(async (id, done) => {
   const user = await prisma.user.findUnique({
     where: {
