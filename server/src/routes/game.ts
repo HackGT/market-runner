@@ -41,7 +41,7 @@ gameRoutes.route("/updateUser/:points")
     
     let user = await User.findOneAndUpdate(
       {uuid: req.user.uuid}, 
-      {$push: {scores: pointsToAdd}}
+      {$push: {scores: pointsToAdd!}}
     );
     
     if (!user) {
