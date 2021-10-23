@@ -23,6 +23,10 @@ gameRoutes.route("/leaderboard")
 //TODO: this can be abused 
 gameRoutes.route("/updateUser/:points")
   .post(async (req, res) => {
+    console.log(req.params)
+    if (!req.params.points) {
+      return res.status(400).send({success: false, data: "no points"})
+    }
       
     const pointsToAdd = Number(req.params.points);
     
@@ -30,14 +34,15 @@ gameRoutes.route("/updateUser/:points")
       return res.status(400).send({success: false, data: "no uuid"})
     }
 
-    if (pointsToAdd === undefined) {
+    console.log(pointsToAdd)
+    if (!pointsToAdd) {
       return res.status(400).send({success: false, data: "no points"})
     }
     
     let user = await User.findOneAndUpdate(
       {uuid: req.user.uuid}, 
-      {$push: {scores: pointsToAdd}});
-
+      {$push: {scores: pointsToAdd}}
+    );
     
     if (!user) {
       return res.status(400).send({success: false, data: 'uuid not valid'})
