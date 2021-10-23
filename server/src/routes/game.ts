@@ -30,6 +30,10 @@ gameRoutes.route("/updateUser/:points")
       return res.status(400).send({success: false, data: "no uuid"})
     }
 
+    if (pointsToAdd === undefined) {
+      return res.status(400).send({success: false, data: "no points"})
+    }
+    
     let user = await User.findOneAndUpdate(
       {uuid: req.user.uuid}, 
       {$push: {scores: pointsToAdd}});
