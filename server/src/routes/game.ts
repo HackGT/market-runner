@@ -1,5 +1,5 @@
 import express from "express";
-import {User} from "../entity/User"
+import {IUser, User} from "../entity/User"
 export let gameRoutes = express.Router();
 
 
