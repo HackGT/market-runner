@@ -19,4 +19,4 @@ COPY --from=build /usr/src/market/client/ /usr/src/market/client/
 WORKDIR /usr/src/market/server/
 
 EXPOSE 3000
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
