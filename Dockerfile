@@ -1,5 +1,5 @@
 # Build container
-FROM node:14-alpine AS build
+FROM node:12-alpine AS build
 
 WORKDIR /usr/src/market/
 COPY . /usr/src/market/
@@ -11,7 +11,7 @@ RUN yarn build
 WORKDIR /usr/src/market/server/
 RUN yarn install
 
-FROM node:14-alpine
+FROM node:12-alpine
 
 COPY --from=build /usr/src/market/server/ /usr/src/market/server/
 COPY --from=build /usr/src/market/client/ /usr/src/market/client/
