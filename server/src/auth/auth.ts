@@ -1,12 +1,17 @@
-import express from "express";
-import session from "express-session";
-import passport from "passport";
-import { Strategy as GroundTruthStrategy } from "passport-ground-truth";
-import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+// You shouldn't need to edit any code in this file
+// It handles Express authentication such as cookies, and admin middleware
 
-import { prisma } from "../common";
-import { app } from "../app";
+import mongoose = require("mongoose");
+import express = require("express");
+import passport = require("passport");
+import session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 import dotenv from "dotenv";
+import { Strategy as GroundTruthStrategy } from "passport-ground-truth";
+
+import { app } from "../app";
+import { createNew, IUser, User } from "../schema";
+import { getGroup, getInitialGroupsLeft } from "../utils/utils";
 
 dotenv.config();
 
@@ -16,21 +21,18 @@ if (process.env.PRODUCTION === "true") {
   console.warn("OAuth callback(s) running in development mode");
 }
 
-if (!process.env.SESSION_SECRET) {
-  throw new Error("Session secret not specified");
+const session_secret = process.env.SECRET;
+if (!session_secret) {
+  throw new Error("Secret not specified");
 }
 
 app.use(
   session({
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
-    },
-    secret: process.env.SESSION_SECRET!,
+    secret: session_secret,
     saveUninitialized: false,
     resave: true,
-    store: new PrismaSessionStore(prisma, {
-      checkPeriod: 2 * 60 * 1000, // ms
-      dbRecordIdIsSessionId: true,
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
     }),
   })
 );
@@ -44,7 +46,6 @@ export function isAuthenticated(
   next: express.NextFunction
 ): void {
   response.setHeader("Cache-Control", "private");
-  console.log(request.user);
   if (!request.isAuthenticated() || !request.user) {
     if (request.session) {
       request.session.returnTo = request.originalUrl;
@@ -55,61 +56,98 @@ export function isAuthenticated(
   }
 }
 
+export function isAdmin(
+  request: express.Request,
+  response: express.Response,
+  next: express.NextFunction
+) {
+  response.setHeader("Cache-Control", "private");
+
+  const auth = request.headers.authorization;
+  const user = request.user as IUser | undefined;
+
+  if (process.env.PRODUCTION !== "true" || user?.admin) {
+    next();
+  } else if (auth && typeof auth === "string" && auth.includes(" ")) {
+    const key = auth.split(" ")[1].toString();
+
+    if (key === process.env.ADMIN_SECRET) {
+      next();
+    } else {
+      response.status(401).json({ error: "Incorrect auth token provided" });
+    }
+  } else {
+    response.status(401).json({ error: "No auth token provided" });
+  }
+}
+
 passport.use(
   new GroundTruthStrategy(
     {
-      clientID: process.env.GROUND_TRUTH_CLIENT_ID,
-      clientSecret: process.env.GROUND_TRUTH_CLIENT_SECRET,
+      clientID: process.env.GROUND_TRUTH_ID,
+      clientSecret: process.env.GROUND_TRUTH_SECRET,
       baseURL: process.env.GROUND_TRUTH_URL,
       callbackURL: "/auth/login/callback",
     },
     async (req, accessToken, refreshToken, profile, done) => {
-      let user = await prisma.user.findUnique({
-        where: {
-          uuid: profile.uuid,
-        },
-      });
+      let user = await User.findOne({ uuid: profile.uuid });
+      let group = getGroup(profile.email);
 
       if (!user) {
-        user = await prisma.user.create({
-          data: {
-            name: profile.name,
-            uuid: profile.uuid,
-            email: profile.email,
-            token: profile.token,
-            score: 0,
-          },
+        user = createNew<IUser>(User, {
+          ...profile,
+          admin: false,
+          graded: 0,
+          skipped: 0,
+          calibrationScores: [],
+          group: group,
+          calibrationMapping: [],
+          groupsLeft: getInitialGroupsLeft(group),
         });
       } else {
-        user = await prisma.user.update({
-          where: {
-            uuid: profile.uuid,
-          },
-          data: {
-            token: accessToken,
-          },
-        });
+        user.token = accessToken;
+        if (!user.group) {
+          user.group = group;
+        }
+        if (!user.groupsLeft) {
+          user.groupsLeft = getInitialGroupsLeft(group);
+        }
+        if (!user.calibrationMapping) {
+          user.calibrationMapping = [];
+        }
+        if (!user.calibrationScores) {
+          user.calibrationScores = [];
+        }
       }
 
+      let domain = user.email.split("@").pop();
+      console.log(user.email);
+
+      if (
+        domain &&
+        (domain.includes("hexlabs") || domain.includes("hack.gt"))
+      ) {
+        user.admin = true;
+      }
+
+      await user.save();
       done(null, user);
     }
   )
 );
 
-passport.serializeUser<string>((user, done) => {
-  done(null, user.uuid || "");
+passport.serializeUser<IUser, string>((user, done) => {
+  done(null, user.uuid);
 });
 
-passport.deserializeUser<string>(async (id, done) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      uuid: id,
-    },
+passport.deserializeUser<IUser, string>((id, done) => {
+  User.findOne({ uuid: id }, (err, user) => {
+    done(err, user!);
   });
-
-  if (user) {
-    done(null, user);
-  } else {
-    done("No user found", undefined);
-  }
 });
+
+declare global {
+  namespace Express {
+    interface User extends IUser {}
+  }
+}

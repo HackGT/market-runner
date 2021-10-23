@@ -1,6 +1,5 @@
-import { User } from "@prisma/client";
 import express from "express";
-import axios from "axios";
+import fetch from "node-fetch";
 import passport from "passport";
 
 export const authRoutes = express.Router();
@@ -8,7 +7,6 @@ export const authRoutes = express.Router();
 authRoutes.get("/login", passport.authenticate("groundtruth"));
 
 authRoutes.route("/login/callback").get((req, res, next) => {
-  console.log("hereee");
   if (req.query.error === "access_denied") {
     res.redirect("/auth/login");
     return;
@@ -22,28 +20,30 @@ authRoutes.route("/login/callback").get((req, res, next) => {
 
 authRoutes.route("/check").get((req, res) => {
   if (req.user) {
-    return res.status(200).json(req.user);
+    res.status(200).json(req.user);
+  } else {
+    res.status(400).json({ success: false });
   }
-  return res.status(400).json({ success: false });
 });
 
 authRoutes.route("/logout").all(async (req, res) => {
-  const user = req.user as User | undefined;
-
-  if (user) {
+  if (req.user) {
     try {
-      await axios(`${process.env.GROUND_TRUTH_URL}/auth/logout`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-      req.logout();
-      return res.redirect("/auth/login");
+      await fetch(
+        new URL("/api/user/logout", process.env.GROUND_TRUTH_URL).toString(),
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${req.user.token}`,
+          },
+        }
+      );
     } catch (err) {
-      return console.log(err);
+      console.error(err);
+    } finally {
+      req.logout();
     }
-  } else {
-    return res.redirect("/auth/login");
   }
+
+  res.redirect("/auth/login");
 });
