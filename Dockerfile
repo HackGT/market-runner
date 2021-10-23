@@ -10,7 +10,6 @@ RUN yarn build
 
 WORKDIR /usr/src/market/server/
 RUN yarn install
-RUN yarn build
 
 FROM node:14-alpine
 
