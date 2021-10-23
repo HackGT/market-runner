@@ -22,7 +22,8 @@ export const User = mongoose.model<IUser & mongoose.Document>("User", new mongoo
     },
     scores: {
         type: [Number],
-        default: []
+        default: [],
+        required: true
     },
     token: {
         type: String,
