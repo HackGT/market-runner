@@ -1,44 +1,64 @@
+// You'll need to add in the route handler here at the comment below.
+// Everything else sets up the middleware, serves the frontend files, and sets up the server
+
+import fs from "fs";
+import path from "path";
 import express from "express";
+import compression from "compression";
+import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
-import morgan from "morgan";
-import compression from "compression";
-
+import helmet from "helmet";
 dotenv.config();
 
-const PORT = process.env.PORT || 8000;
+const VERSION_NUMBER = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, "../package.json"), "utf8")
+).version;
+const PORT = process.env.PORT || 3000;
+export let app = express();
 
-process.on("unhandledRejection", err => {
-  throw err;
-});
-
-export const app = express();
-
+app.use(helmet.frameguard({ action: 'SAMEORIGIN' }));
 app.use(morgan("dev"));
 app.use(compression());
 app.use(express.json());
 app.use(cors());
 
+// Throw and show a stack trace on an unhandled Promise rejection instead of logging an unhelpful warning
+process.on("unhandledRejection", (err) => {
+  throw err;
+});
+
 import { isAuthenticated } from "./auth/auth";
 import { authRoutes } from "./routes/auth";
-import { scoresRoutes } from "./routes/scores";
-import { handleError } from "./utils/handleError";
+import {gameRoutes} from "./routes/game";
 
 app.get("/status", (req, res) => {
-  res.status(200).send("Success");
+    res.status(200).send("Success");
 });
+
 
 app.use("/auth", authRoutes);
-app.use("/scores", isAuthenticated, scoresRoutes);
+// app.use("/application", isAuthenticated, applicationRoutes);
 
-app.use(isAuthenticated, express.static(path.join(__dirname, "../../client/build")));
-app.get("*", isAuthenticated, (req, res) => {
-  res.sendFile(path.join(__dirname, "../../client/build", "index.html"));
+app.use("/", isAuthenticated, gameRoutes);
+
+
+app.use(
+  isAuthenticated,
+  express.static(path.join(__dirname, "../../client/build"))
+);
+
+app.get("/*", function (req, res) {
+    res.sendFile(
+        path.join(__dirname, "../../client/build", "index.html"),
+        function (err) {
+            if (err) {
+                res.status(500).send(err);
+            }
+        }
+    );
 });
 
-app.use(handleError);
-
 app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
+    console.log(`TEH GAME system v${VERSION_NUMBER} started on port ${PORT}`);
 });
