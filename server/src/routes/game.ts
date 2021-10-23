@@ -40,10 +40,10 @@ gameRoutes.route("/updateUser/:points")
       return res.status(400).send({success: false, data: 'uuid not valid'})
     }
 
-    //if (user.highscore < pointsToAdd) {
-    //    user.highscore = pointsToAdd;
-    //    await user.save()
-    //}
+    if (user.highscore < pointsToAdd) {
+        user.highscore = pointsToAdd;
+        await user.save()
+    }
     
     return res.status(200).send({success: true, data: "points updated"})
     
