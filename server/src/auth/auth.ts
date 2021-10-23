@@ -10,8 +10,8 @@ import dotenv from "dotenv";
 import { Strategy as GroundTruthStrategy } from "passport-ground-truth";
 
 import { app } from "../app";
-import { createNew, IUser, User } from "../schema";
-import { getGroup, getInitialGroupsLeft } from "../utils/utils";
+import { IUser, User } from "../entity/User";
+import { createNew } from "../entity/database";
 
 dotenv.config();
 
@@ -91,45 +91,16 @@ passport.use(
     },
     async (req, accessToken, refreshToken, profile, done) => {
       let user = await User.findOne({ uuid: profile.uuid });
-      let group = getGroup(profile.email);
-
       if (!user) {
         user = createNew<IUser>(User, {
-          ...profile,
+          uuid: profile.uuid,
+          name: profile.name,
+          token: profile.token,
           admin: false,
-          graded: 0,
-          skipped: 0,
-          calibrationScores: [],
-          group: group,
-          calibrationMapping: [],
-          groupsLeft: getInitialGroupsLeft(group),
+          scores: [],
+          highscore: 0
         });
-      } else {
-        user.token = accessToken;
-        if (!user.group) {
-          user.group = group;
-        }
-        if (!user.groupsLeft) {
-          user.groupsLeft = getInitialGroupsLeft(group);
-        }
-        if (!user.calibrationMapping) {
-          user.calibrationMapping = [];
-        }
-        if (!user.calibrationScores) {
-          user.calibrationScores = [];
-        }
       }
-
-      let domain = user.email.split("@").pop();
-      console.log(user.email);
-
-      if (
-        domain &&
-        (domain.includes("hexlabs") || domain.includes("hack.gt"))
-      ) {
-        user.admin = true;
-      }
-
       await user.save();
       done(null, user);
     }

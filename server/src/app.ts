@@ -9,7 +9,6 @@ import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
-var cron = require('node-cron');
 dotenv.config();
 
 const VERSION_NUMBER = JSON.parse(
@@ -31,7 +30,7 @@ process.on("unhandledRejection", (err) => {
 
 import { isAuthenticated } from "./auth/auth";
 import { authRoutes } from "./routes/auth";
-import {getApplications} from "./registration";
+import {gameRoutes} from "./routes/game";
 
 app.get("/status", (req, res) => {
     res.status(200).send("Success");
@@ -41,26 +40,13 @@ app.get("/status", (req, res) => {
 app.use("/auth", authRoutes);
 // app.use("/application", isAuthenticated, applicationRoutes);
 
+app.use("/", isAuthenticated, gameRoutes);
+
+
 app.use(
   isAuthenticated,
   express.static(path.join(__dirname, "../../client/build"))
 );
-
-app.get("/", isAuthenticated, (request, response) => {
-    response.sendFile(path.join(__dirname, "../../client/build", "index.html"));
-});
-
-
-app.get("*", function (req, res) {
-    res.sendFile(
-        path.join(__dirname, "../../client/build", "index.html"),
-        function (err) {
-            if (err) {
-                res.status(500).send(err);
-            }
-        }
-    );
-});
 
 app.get("/*", function (req, res) {
     res.sendFile(
@@ -74,5 +60,5 @@ app.get("/*", function (req, res) {
 });
 
 app.listen(PORT, () => {
-    console.log(`Application Bot system v${VERSION_NUMBER} started on port ${PORT}`);
+    console.log(`TEH GAME system v${VERSION_NUMBER} started on port ${PORT}`);
 });
