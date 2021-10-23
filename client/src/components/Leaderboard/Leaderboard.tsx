@@ -15,7 +15,7 @@ const Leaderboard = () => {
     useEffect(() => {
         const getLeaderboardData = async () => {
             const data = await getLeaderboard()
-            setLeaderboard(data)
+            setLeaderboard(data.splice(0, 10))
         }
         getLeaderboardData();
     }, [])
@@ -39,7 +39,7 @@ const Leaderboard = () => {
                                 <tr>
                                     <td className={styles.table_entry}>{i+1}</td>
                                     <td className={styles.table_entry}>{user.name}</td>
-                                    <td className={styles.table_entry}>{user.points}</td>
+                                    <td className={styles.table_entry}>{user.highscore}</td>
                                 </tr>
                             )
                         })}

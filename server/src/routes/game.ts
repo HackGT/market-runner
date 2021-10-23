@@ -7,7 +7,7 @@ gameRoutes.route("/leaderboard")
   .get(async (req, res) => {
       let usersSorted = await User.find(
         {
-            points: {
+            highscore: {
                 $gt: 0
             }
         }, 
@@ -18,7 +18,6 @@ gameRoutes.route("/leaderboard")
             }
         }
     )
-    console.log(usersSorted);
     return res.status(200).send(usersSorted);
   })
 //TODO: this can be abused 
