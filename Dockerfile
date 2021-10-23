@@ -9,7 +9,7 @@ RUN yarn install
 RUN yarn build
 
 WORKDIR /usr/src/market/server/
-RUN yarn install
+RUN npm install
 
 FROM node:12-alpine
 
