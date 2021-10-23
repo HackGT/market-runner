@@ -8,6 +8,8 @@ import Foreground from './foreground';
 import backgroundImage from '../assets/background.png';
 import scoreBackground from '../assets/score.png'
 
+import { updateUserScore } from '../services/leaderboard';
+
 function GameWrapper() {
   const game_width = window.innerWidth - window.innerWidth/10
   const game_height = window.innerHeight - window.innerHeight/10
@@ -47,8 +49,10 @@ const Game: React.FC<Props> = (props: Props) => {
     setGameSpeed(8*(1-Math.exp(-.04 * time_passed)) + 2)
   });
 
-  function end_game() {
-    window.location.href = '/gameover/' + String(Math.floor(time_passed * 5));
+  async function end_game() {
+    let score = Math.floor(time_passed * 5)
+    await updateUserScore(score)
+    window.location.href = '/gameover/' + String(score);
   }
 
   function get_score() {
