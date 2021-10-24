@@ -3,7 +3,7 @@ import {IUser, User} from "../entity/User"
 export let gameRoutes = express.Router();
 
 
-gameRoutes.route("/leaderboard")
+gameRoutes.route("/leaderboard1")
   .get(async (req, res) => {
       let usersSorted = await User.find(
         {

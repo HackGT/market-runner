@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const getLeaderboard = async (): Promise<any> => {
   try {
-    const event = await axios.get('/leaderboard/');
+    const event = await axios.get('/leaderboard1/');
     return event.data;
   } catch (e: any) {
     if (e.response) {
