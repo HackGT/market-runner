@@ -46,7 +46,7 @@ const Game: React.FC<Props> = (props: Props) => {
   const [gameSpeed, setGameSpeed] = useState(0);
   useTick(delta => {
     setTime(time_passed + delta*.005)
-    setGameSpeed(8*(1-Math.exp(-.04 * time_passed)) + 2)
+    setGameSpeed(13*(1-Math.exp(-.03 * time_passed)) + 2.5)
   });
 
   async function end_game() {
